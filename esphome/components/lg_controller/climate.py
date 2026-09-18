@@ -47,7 +47,7 @@ CONF_PURIFIER = "purifier"
 CONF_INTERNAL_THERMISTOR = "internal_thermistor"
 CONF_AUTO_DRY = "auto_dry"
 
-VANE_OPTIONS = ["0 (Default)", "Top", "Top -1", "Top -2", "Down +2", "Down +1", "Down"]
+VANE_OPTIONS = ["0 - Default", "1 - Top", "2 - Top -1", "3 - Top -2", "4 - Down +2", "5 - Down +1", "6 - Down"]
 OVERHEATING_OPTIONS = ["0 (Default)", "1 (+4C/+6C)", "2 (+2C/+4C)", "3 (-1C/+1C)", "4 (-0.5C/+0.5C)"]
 
 CONFIG_SCHEMA = climate.climate_schema(LgController).extend(
