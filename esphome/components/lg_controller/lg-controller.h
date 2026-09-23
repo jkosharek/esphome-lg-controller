@@ -439,16 +439,15 @@ public:
         ESPPreferenceObject pref = global_preferences->make_preference<NVSStorage>(this->get_object_id_hash() ^ NVS_STORAGE_VERSION);
         pref.load(&nvs_storage_);
 
-        auto restore = this->restore_state_();
-        if (restore.has_value()) {
-            restore->apply(this);
-        } else {
-            this->mode = climate::CLIMATE_MODE_OFF;
-            this->target_temperature = 20;
-            this->fan_mode = climate::CLIMATE_FAN_MEDIUM;
-            this->swing_mode = climate::CLIMATE_SWING_OFF;
-            this->publish_state();
-        }
+        // Do not restore saved state on boot: the AC (or another wired
+        // controller) is the source of truth. Restoring made the component
+        // treat stale values as a pending change, ignore the unit's real
+        // status frames, and then transmit the stale state back to the unit.
+        this->mode = climate::CLIMATE_MODE_OFF;
+        this->target_temperature = 20;
+        this->fan_mode = climate::CLIMATE_FAN_MEDIUM;
+        this->swing_mode = climate::CLIMATE_SWING_OFF;
+        this->publish_state();
 
         internal_thermistor_.restore_and_set_mode(esphome::switch_::SWITCH_RESTORE_DEFAULT_OFF);
 
