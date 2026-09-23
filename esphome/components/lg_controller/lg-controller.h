@@ -460,11 +460,7 @@ public:
             uint8_t b;
             UARTDevice::read_byte(&b);
         }
-        // Do not queue a status change on boot. Doing so made the component
-        // ignore the unit's own status frames ("ignoring because pending
-        // change") and transmit its defaults instead, turning the unit off.
-        // Start clean and adopt whatever the bus reports.
-        pending_status_change_ = false;
+        pending_status_change_ = true;
 
         // Call `update` every 6 seconds, but first wait 10 seconds.
         set_timeout("initial_send", 10000, [this]() {
