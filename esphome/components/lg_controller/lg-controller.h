@@ -184,6 +184,8 @@ class LgController final : public climate::Climate, public uart::UARTDevice, pub
     PendingSendKind pending_send_ = PendingSendKind::None;
 
     bool pending_status_change_ = false;
+    // Set once we have adopted a status message from the bus after boot.
+    bool adopted_initial_status_ = false;
     bool pending_type_a_settings_change_ = false;
     bool pending_type_b_settings_change_ = false;
 
@@ -1016,6 +1018,14 @@ private:
 
         // Don't update our settings if we have a pending change/send, because else we overwrite
         // changes we still have to send (or are sending) to the AC.
+        if (pending_status_change_ && !adopted_initial_status_) {
+            // First status after boot: the unit (or the other controller) is the
+            // source of truth. Drop our restored/default state instead of
+            // transmitting it back and turning the unit off.
+            ESP_LOGD(TAG, "adopting initial status from bus");
+            pending_status_change_ = false;
+        }
+        adopted_initial_status_ = true;
         if (pending_status_change_) {
             ESP_LOGD(TAG, "ignoring because pending change");
             return;
