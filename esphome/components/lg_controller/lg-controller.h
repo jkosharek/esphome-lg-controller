@@ -2,6 +2,7 @@
 
 #include "esphome.h"
 #include "esphome/components/uart/uart.h"
+#include "esphome/core/alloc_helpers.h"
 
 static const char* const TAG = "lg-controller";
 
